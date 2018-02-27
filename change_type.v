@@ -35,43 +35,32 @@ output [11:0]RAM_addr;    //将地址输送出去！
 
 assign RAM_addr=in_addr;    //内存地址就是选择开关的拨动情况
 
-always @(*)   //每次时钟上升沿的时候将，看看数码管的显示数据应该是什么类型的
+always @(*)
 begin
-   if(pro_reset==3'b001) //PC的值
-     chose_out[31:0]=PC;
-     
-    else if(pro_reset==3'b010) //总周期数
-    begin
-    chose_out[31:16]=all_time;
-    chose_out[15:0]=0;
+   case(pro_reset)
+    3'b001:begin
+      chose_out[31:0]<=PC;
     end
-    
-    else if(pro_reset==3'b011)  //无条件转移数
-      begin
-      chose_out[31:16]=j_change;
-      chose_out[15:0]=0;
-      end
-     
-    else if(pro_reset==3'b100)//有条件分转移成功数
-    begin
-        chose_out[31:16]=b_change_success;
-        chose_out[15:0]=0;
-     end
-     
-      else if(pro_reset==3'b101)//有条件分转移数
-        begin
-            chose_out[31:16]=b_change;
-             chose_out[15:0]=0;
-        end
-       
-       else if(pro_reset==3'b110)  //这个时候查看的是内存的数据
-       begin
-         //这里应该调用一个模块，将RAM_addr作为输入数据，输入到内存的地址线中作为地址、
-         //然后取出数据，再使得chose_out=从内存中输出的32位数据
-       end
-         
-       else  //总开关打开的时候，数码管的数据就是跑马灯的数据
-       chose_out=SyscallOut;
+    3'b010:begin
+      chose_out[31:16]<=0;
+      chose_out[15:0]<=all_time;
+    end
+    3'b011:begin
+      chose_out[31:16]<=0;
+      chose_out[15:0]<=j_change;
+    end
+    3'b100:begin
+      chose_out[31:16]<=0;
+      chose_out[15:0]<=b_change_success;
+    end
+    3'b101:begin
+      chose_out[31:16]<=0;
+      chose_out[15:0]<=b_change;
+    end
+    3'b110:begin
+      chose_out<=0;
+    end
+    default:chose_out <= SyscallOut;
 end
 
 endmodule
