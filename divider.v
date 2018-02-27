@@ -20,7 +20,7 @@ always @(posedge clk_in or negedge rst) begin
 		end
 	else
 		begin
-			if (cnt==30)//actually 50000000, N/2-1
+			if (cnt==30)//actually 2500000 times
 				begin
 					clk_out <= ~clk_out;
 					cnt <= 0;
