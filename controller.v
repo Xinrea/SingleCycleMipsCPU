@@ -373,7 +373,7 @@ module controller(op,func,Syscall,ALUOP,jr,jal,j,bne,beq,EXTOP,Memwrite,MemToReg
                 6'b101011:begin//sw
                     ALUsrc <= 1;
                     Memwrite <= 1;
-                    Regwrite <= 1;
+                    Regwrite <= 0;
                     Syscall <= 0;
                     jr <= 0;
                     jal <=0;

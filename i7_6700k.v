@@ -8,8 +8,8 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,choose,leds,SEG,AN
 	output [15:0]leds;
 	output [7:0]SEG;
     output [7:0]AN;
-    //如果需要添加模块或修改信号，请同步更改wire声明、wire连接、模块声明三个部分
-    //此处开始为连接每个模块input和output的wire声明
+    //如果�?要添加模块或修改信号，请同步更改wire声明、wire连接、模块声明三个部�?
+    //此处�?始为连接每个模块input和output的wire声明
 
 	//controller
 	wire [5:0]op;
@@ -154,7 +154,7 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,choose,leds,SEG,AN
     assign blez = 0;
 
     //模块引用
-    divider m_divider(clk_in, choose,RST, clk_out);
+    divider m_divider(clk_in, choose,clk_out);
 	controller m_controller(op,func,Syscall,ALUOP,jr,jal,j,bne,beq,EXTOP,Memwrite,MemToReg,Regwrite,ALUsrc,RegDst);
 	ALU m_ALU(X,Y,OP,OF,CF,EQ,R,R2);
 //	extender m_extender(ROM_D,d4,d5,d7);

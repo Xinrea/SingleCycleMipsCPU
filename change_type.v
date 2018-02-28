@@ -55,7 +55,7 @@ begin
       chose_out[31:0]<=b_change;
     end
     3'b110:begin
-      chose_out<=Mdata;
+      chose_out[31:0]<=Mdata;
     end
     default:chose_out <= SyscallOut;
   endcase

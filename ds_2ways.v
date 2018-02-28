@@ -62,5 +62,5 @@ module DS_8b(str, sel ,clk , clr, address, extra_addr, data_in, data_out_8b, ext
         end
     end
     assign  data_out_8b = ram_8b[address];
-    assign extra_data_out_8b = ram_8b[extra_addr];
+    assign extra_dout_8b = ram_8b[extra_addr];
 endmodule
