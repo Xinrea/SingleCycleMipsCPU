@@ -18,9 +18,10 @@
 // Additional Comments:
 // 
 //////////////////////////////////////////////////////////////////////////////////
-module change_type(clk,SyscallOut,PC,all_time,j_change,b_change,b_change_success,pro_reset,in_addr,chose_out,RAM_addr);
+module change_type(clk,SyscallOut,Mdata,PC,all_time,j_change,b_change,b_change_success,pro_reset,in_addr,chose_out,RAM_addr);
 input clk;
 input [31:0]SyscallOut; //
+input [31:0]Mdata;
 input [31:0]PC;   //输入pc的值
 input [15:0]all_time;  //16位周期数
 input [15:0]j_change;  //无条件分支指令数
@@ -58,9 +59,10 @@ begin
       chose_out[15:0]<=b_change;
     end
     3'b110:begin
-      chose_out<=0;
+      chose_out<=Mdata;
     end
     default:chose_out <= SyscallOut;
+  endcase
 end
 
 endmodule

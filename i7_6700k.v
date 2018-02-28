@@ -1,9 +1,10 @@
-module i7_6700k(clk_in,RST,pro_reset,in_addr,leds,SEG,AN
+module i7_6700k(clk_in,RST,pro_reset,in_addr,choose,leds,SEG,AN
     );
 	input clk_in;
 	input RST;
 	input [2:0]pro_reset;
 	input [11:0]in_addr;
+    input choose;
 	output [15:0]leds;
 	output [7:0]SEG;
     output [7:0]AN;
@@ -42,11 +43,13 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,leds,SEG,AN
 	//DS
 	wire 	str,	//信号?1时同步写? 
 			clk, 	//信号：时?
-			clr,	//信号?1时异步清?
-			mode;	//信号?0时字访问?1时字节访?
-	wire	[9:0] d_address;	//地址：输?
+			clr;	//信号?1时异步清?
+	wire	[1:0]mode;	//信号?0时字访问?1时字节访?
+    wire    [11:0]extra_addr;
+	wire	[11:0] d_address;	//地址：输?
 	wire	[31:0] data_in;	//数据：输?
 	wire	[31:0] d_data_out;	//数据：输?
+    wire    [31:0]extra_dout;
 
 	//PC
 	wire [31:0]pc_in;
@@ -130,6 +133,7 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,leds,SEG,AN
     //change_type input
     wire [31:0]chose_out;
     wire [11:0]RAM_addr;
+    assign extra_addr = RAM_addr;
 
     //cpu choose
     assign ROM_D = data_out;
@@ -150,12 +154,12 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,leds,SEG,AN
     assign blez = 0;
 
     //模块引用
-    divider m_divider(clk_in, rst, clk_out);
+    divider m_divider(clk_in, choose,rst, clk_out);
 	controller m_controller(op,func,Syscall,ALUOP,jr,jal,j,bne,beq,EXTOP,Memwrite,MemToReg,Regwrite,ALUsrc,RegDst);
 	ALU m_ALU(X,Y,OP,OF,CF,EQ,R,R2);
 //	extender m_extender(ROM_D,d4,d5,d7);
 	IS m_IS(address, data_out);
-	DS m_DS(str, clk, clr, mode, d_address, data_in, d_data_out);
+	DS_2ways m_DS(str, clk, clr, mode, d_address, extra_addr, data_in, d_data_out, extra_dout);
 	pc m_pc(pc_clk,halt,rst,pc_in,pc_out);
 	regfile m_regfile(r_clk, WE, rW, rA, rB, W, A, B);
 	cpu_choose m_cpuchoose(clk_out,ROM_D,PC,RegFile_E,index,RF_A,ALU_R,RAM_D,
@@ -166,6 +170,6 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,leds,SEG,AN
     operating_parameter m_op(o_rst,o_clk,halt,total,conditional,unconditional,
     conditional_success,j,jal,jr,blez,beq,bne,correct_b);
     led m_led(RST,pro_reset,in_addr,leds);
-	change_type m_ct(clk_out,SyscallOut,PC,total,unconditional,conditional,conditional_success,pro_reset,in_addr,chose_out,RAM_addr);
+	change_type m_ct(clk_out,SyscallOut,extra_dout,PC,total,unconditional,conditional,conditional_success,pro_reset,in_addr,chose_out,RAM_addr);
 	display m_display(clk_in,chose_out,SEG,AN);
 endmodule

@@ -2,6 +2,7 @@ module i7_test();
 	reg clk,RST;
 	reg [2:0]pro_reset;
 	reg [11:0]in_addr;
+    reg choose;
 	wire [15:0]leds;
 	wire [7:0]SEG;
     wire [7:0]AN;
@@ -16,5 +17,5 @@ module i7_test();
 		$dumpvars(0, i7test);
     end
     always #5 clk = ~clk;
-	i7_6700k i7test(clk,RST,pro_reset,in_addr,leds,SEG,AN);
+	i7_6700k i7test(clk,RST,pro_reset,in_addr,choose,leds,SEG,AN);
 endmodule
