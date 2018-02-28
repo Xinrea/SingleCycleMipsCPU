@@ -46,7 +46,12 @@ module DS_8b(str, sel ,clk , clr, address, extra_addr, data_in, data_out_8b, ext
     output   [DWIDTH-1:0] data_out_8b, extra_dout_8b; //数据：输出
     reg [DWIDTH-1:0] ram_8b [2**AWIDTH-1:0];    //存储器
     integer i = 0;
-    always @(posedge clk or clr) begin
+    initial begin
+        for(i = 0; i < 2**AWIDTH; i = i + 1) begin
+            ram_8b[i] = 0;
+        end
+    end
+    always @(posedge clk) begin
         if (clk && str && sel && !clr) begin //仅仅在片选时有效
             ram_8b[address] <= data_in;
         end
@@ -57,5 +62,5 @@ module DS_8b(str, sel ,clk , clr, address, extra_addr, data_in, data_out_8b, ext
         end
     end
     assign  data_out_8b = ram_8b[address];
-    assign data_out_8b = ram_8b[extra_addr];
+    assign extra_data_out_8b = ram_8b[extra_addr];
 endmodule

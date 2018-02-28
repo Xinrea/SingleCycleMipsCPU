@@ -8,7 +8,7 @@
 
 #set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets SW_IBUF[15]];
 
-set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets leds_OBUF[0]];
+set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets leds_OBUF[15]];
 
 
 ## Clock signal

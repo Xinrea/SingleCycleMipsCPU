@@ -114,6 +114,7 @@ module ALU(X,Y,OP,OF,CF,EQ,R,R2);//全功能实现
                 OF<=0;
                 R2<=0;
             end
+            
         endcase
     end
 endmodule

@@ -118,7 +118,7 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,choose,leds,SEG,AN
 
     //PC input;
     assign pc_clk = clk_out;
-    assign halt = (data_out==0)|((RF_A==10)&Syscall);
+    assign halt = ((data_out==0)|((RF_A==10)&Syscall))&~RST;
     assign rst = RST;
     assign pc_in = out11;
 
@@ -154,20 +154,20 @@ module i7_6700k(clk_in,RST,pro_reset,in_addr,choose,leds,SEG,AN
     assign blez = 0;
 
     //模块引用
-    divider m_divider(clk_in, choose,rst, clk_out);
+    divider m_divider(clk_in, choose,RST, clk_out);
 	controller m_controller(op,func,Syscall,ALUOP,jr,jal,j,bne,beq,EXTOP,Memwrite,MemToReg,Regwrite,ALUsrc,RegDst);
 	ALU m_ALU(X,Y,OP,OF,CF,EQ,R,R2);
 //	extender m_extender(ROM_D,d4,d5,d7);
 	IS m_IS(address, data_out);
-	DS_2ways m_DS(str, clk, clr, mode, d_address, extra_addr, data_in, d_data_out, extra_dout);
-	pc m_pc(pc_clk,halt,rst,pc_in,pc_out);
+	DS_2ways m_DS(str, clk, RST, mode, d_address, extra_addr, data_in, d_data_out, extra_dout);
+	pc m_pc(pc_clk,halt,RST,pc_in,pc_out);
 	regfile m_regfile(r_clk, WE, rW, rA, rB, W, A, B);
 	cpu_choose m_cpuchoose(clk_out,ROM_D,PC,RegFile_E,index,RF_A,ALU_R,RAM_D,
 	S,Syscall,RegDst,jal,correct_b,j,jr,ALUsrc,sh,MemToReg,EXTOP,
 	out0,out1,out2,out3,out4,
     out5,out6,out7,out8,out9,out10,out11,out12,out13,out14,SyscallOut
     );
-    operating_parameter m_op(o_rst,o_clk,halt,total,conditional,unconditional,
+    operating_parameter m_op(RST,clk_out,halt,total,conditional,unconditional,
     conditional_success,j,jal,jr,blez,beq,bne,correct_b);
     led m_led(RST,pro_reset,in_addr,leds);
 	change_type m_ct(clk_out,SyscallOut,extra_dout,PC,total,unconditional,conditional,conditional_success,pro_reset,in_addr,chose_out,RAM_addr);

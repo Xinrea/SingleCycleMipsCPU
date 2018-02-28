@@ -11,6 +11,7 @@ module i7_test();
     	RST = 0;
     	pro_reset = 0;
     	in_addr = 0;
+        choose = 1;
         //下为iverilog+gtkwave调试所需的语句
     	$monitor("At time %t, ocnt = %d", $time, clk);
     	$dumpfile("counter_test.vcd");
